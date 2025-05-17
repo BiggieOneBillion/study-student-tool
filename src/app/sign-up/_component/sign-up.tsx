@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -17,9 +16,6 @@ import {
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/ui/password-input";
@@ -84,16 +80,16 @@ export default function Signup() {
   }
 
   return (
-    <div className="flex h-full min-h-[100vh] w-full items-center justify-center px-4 bg-gradient-to-br from-blue-50 to-indigo-50">
-      <Card className="mx-auto w-full max-w-md border border-gray-100 shadow-xl bg-white/70 backdrop-blur-sm">
-        <CardHeader className="space-y-1">
+    <div className="flex h-fully min-h-[100vh]y w-full items-center justify-center px-4y bg-gradient-to-bry from-blue-50y to-indigo-50y">
+      <Card className="mx-auto w-full py-5 max-w-md border border-gray-100 shadow-xly bg-white/70 backdrop-blur-sm">
+        {/* <CardHeader className="space-y-1">
           <CardTitle className="text-lg font-semibold tracking-tight text-center">
             Student Study Guide
           </CardTitle>
           <CardDescription className="text-center text-gray-500">
             Create your account to get started
           </CardDescription>
-        </CardHeader>
+        </CardHeader> */}
         <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -188,12 +184,12 @@ export default function Signup() {
               </div>
             </form>
           </Form>
-          <div className="mt-6 text-center text-sm text-gray-500">
+          {/* <div className="mt-6 text-center text-sm text-gray-500">
             Already have an account?{" "}
             <Link href="/sign-in" className="font-medium text-indigo-600 hover:text-indigo-500">
               Login
             </Link>
-          </div>
+          </div> */}
         </CardContent>
       </Card>
     </div>

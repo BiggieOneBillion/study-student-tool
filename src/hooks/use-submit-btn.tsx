@@ -13,7 +13,7 @@ const useSubmitBtn = ({ initialText = "Submit" }: { initialText: string }) => {
     return (
       <Button
         type="submit"
-        className="flex w-full items-center"
+        className="flex w-full items-center bg-gradient-to-r from-emerald-500 to-teal-600"
         disabled={isLoading}
       >
         {isLoading ? (

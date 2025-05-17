@@ -41,7 +41,7 @@ export default function DashboardLayout({
               </Breadcrumb>
             </div>
           </header>
-          <main className="flex w-screen flex-1 flex-col gap-4 overflow-scroll p-4 pt-5 md:w-full bg-slate-100">
+          <main className="flex w-screen flex-1 flex-col gap-4 overflow-hidden p-4 pt-5 md:w-full bg-slate-100">
             {/* <ProtectRouteDashboard> */}
             {children}
             {/* </ProtectRouteDashboard> */}

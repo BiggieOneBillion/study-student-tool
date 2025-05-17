@@ -9,6 +9,7 @@ import TopicPortalView from "./topic-portal-view";
 import { useAuthStore } from "@/store/user-store";
 import ChatToStudyDocument from "./chat-to-study-document";
 import { useGlobal } from "@/hooks/use-global";
+import { QueryError } from "@/components/global/query-error";
 
 type myLearningViewType = {
   id: string;
@@ -19,7 +20,7 @@ const MyLearningView = ({ id }: myLearningViewType) => {
 
   const context = useGlobal();
 
-  const { isLoading, isError, data } = useQuery({
+  const { isLoading, isError, data, refetch } = useQuery({
     queryKey: ["material"],
     queryFn: async () => {
       const response = await axios.get(`/api/study-plan/${details.id}`);
@@ -33,7 +34,7 @@ const MyLearningView = ({ id }: myLearningViewType) => {
   }
 
   if (isError) {
-    return <div className="text-black">Error fetching data</div>;
+    return <QueryError refetch={refetch} />;
   }
 
   // data && console.log(data);
@@ -46,15 +47,17 @@ const MyLearningView = ({ id }: myLearningViewType) => {
 
 
   return (
-    <main className="space-y-10">
+    <main className="space-y-10 h-full overflow-hiddeny">
       <Header />
       <section className="grid gap-5 xl:grid-cols-3">
         <div className="space-y-3">
           <TopInfo topic={result[0].topic} level={result[0].level} />
-          <MyLearningTopics data={result} />
+          {/* <section className="max-h-[70vh] overflow-y-scroll"> */}
+            <MyLearningTopics data={result} />
+          {/* </section> */}
           {/* {MemorizeChild} */}
         </div>
-        <section className="max-h-600px col-span-2 hidden w-full flex-col gap-4 rounded-sm border bg-gray-50 p-5 xl:flex">
+        <section className="max-h-[80vh] col-span-2 hidden w-full flex-col gap-4 rounded-sm border bg-gray-50 p-5 xl:flex">
           <header className="sticky left-0 top-0 flex justify-between items-center gap-1">
             <section>
               <span className="text font-medium">Learning Area</span> -
@@ -70,7 +73,7 @@ const MyLearningView = ({ id }: myLearningViewType) => {
             </section>
           </header>
           {/* the actual content */}
-          <TopicPortalView />
+           <TopicPortalView />
         </section>
       </section>
     </main>

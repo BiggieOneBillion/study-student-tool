@@ -49,7 +49,7 @@ const SaveToReplaceAlert = ({
         setBtnText("Continue");
       }, 2000);
     }
-  }, []);
+  }, [btnText]);
   return (
     <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
       <AlertDialogContent>

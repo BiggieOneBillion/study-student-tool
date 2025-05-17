@@ -3,7 +3,7 @@ import type { NextRequest } from "next/server";
 import { verifyToken } from "./app/api/utils/auth";
 
 export async function middleware(req: NextRequest) {
-  const unprotectedRoutes = ["/sign-in", "/sign-up"]; // Add more routes if needed
+  const unprotectedRoutes = ["/","/sign-in", "/sign-up"]; // Add more routes if needed
 
   // Check if the current path is unprotected
   const isUnprotected = unprotectedRoutes.some((route) =>
@@ -26,7 +26,7 @@ export async function middleware(req: NextRequest) {
       return NextResponse.next();
     }
   }
-  return NextResponse.redirect(new URL("/sign-in", req.url));
+  return NextResponse.redirect(new URL("/", req.url));
 }
 
 // Apply the middleware to specific routes

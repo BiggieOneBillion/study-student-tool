@@ -2,12 +2,19 @@ import React, { useEffect } from "react";
 // import useQuiz from "../../hooks/useQuiz";
 import useQuiz from "../../../../../../hooks/use-quiz";
 import { LoaderCircle } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import Conditions from "@/components/global/single-conditions";
 import TeneryConditions from "@/components/global/tenery-conditions";
 import { useGlobal } from "@/hooks/use-global";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import axios from "axios";
+import { useAuthStore } from "@/store/user-store";
 
-function Quiz() {
+type Props = {
+  setShowQuiz: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+function Quiz({ setShowQuiz }: Props) {
   const {
     questionOutput,
     questionModal,
@@ -25,6 +32,39 @@ function Quiz() {
 
   const router = useRouter();
 
+  const details = useAuthStore((state) => state.details);
+
+  const queryClient = useQueryClient()
+
+  const params = useParams();
+
+  const id = params.id;
+
+  const { data } = useQuery({
+    queryKey: ["material"],
+    queryFn: async () => {
+      const response = await axios.get(`/api/study-plan/${details.id}`);
+      return response.data;
+    },
+  });
+
+  const handleBtnClick = () => {
+    // context?.setSelectedLabel(topic);
+    context?.callMoreResearch();
+    context?.setIsLoadingExplaination(true);
+    context?.setCurrentInfoIndex(context?.currentInfoIndex + 1);
+    if (data && data.length > 0) {
+      const studyplan = data.filter(
+        (datum: object, index: number) => index === Number(id),
+      );
+      context?.setCurrentStudyPlan(studyplan[Number(id)]);
+    }
+    // context?.setCurrentStudyPlan(studyplan);
+    // size.width! <= 760 && router.push("explanation"); //! this is only to run when on mobile screen only
+  };
+
+  const handleCloseQuizModal = () => setShowQuiz(false);
+
   useEffect(() => {
     if (!questionModal) {
       router.back(); // or return to the home page.
@@ -38,7 +78,7 @@ function Quiz() {
           <div className="sm:h-[60vh]y bordery h-[50vh] w-[97vw] rounded-2xl py-10 sm:max-w-[700px]">
             <div className="flex items-center gap-5 px-4">
               <button
-                onClick={() => router.back()}
+                onClick={handleCloseQuizModal}
                 className="hidden bg-black px-2 py-1 text-sm font-medium text-white lg:inline"
               >
                 Cancel
@@ -99,18 +139,24 @@ function Quiz() {
                         </Conditions>
                       </div>
                       <div className="flex flex-col gap-1">
-                        <p className="text-sm text-gray-600">
-                          {displayResponse}
-                        </p>
+                        {!Boolean(alertText) && (
+                          <p className="text-sm text-gray-600">
+                            {displayResponse}
+                          </p>
+                        )}
                         <TeneryConditions
                           condition={Boolean(alertText)}
                           ifTrue={
                             <button
+                              disabled={!quizEndText}
                               onClick={() => {
-                                window.location.reload();
+                                // window.location.reload();
                                 context?.setQuestionModal(false);
+                                queryClient.invalidateQueries({
+                                  queryKey: ["material"],
+                                }).then(()=> handleBtnClick());
                               }}
-                              className="w-[100px]y flex h-[40px] items-center justify-center rounded-sm bg-black px-5 py-2 text-[13px] font-[600] text-[#FFFFFF]"
+                              className="w-[100px]y flex h-[40px] items-center justify-center rounded-sm bg-black px-5 py-2 text-[13px] font-[600] text-[#FFFFFF] disabled:bg-black/40"
                             >
                               Go Back To Study
                             </button>
@@ -157,4 +203,3 @@ function Quiz() {
 }
 
 export default Quiz;
-

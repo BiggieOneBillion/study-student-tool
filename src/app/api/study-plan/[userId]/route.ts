@@ -17,8 +17,9 @@ export async function POST( // save study plan
   const { userId } = params;
 
   try {
+    //  console.log("body", body);
     await dbConnect(); // connect to database
-
+    //  console.log("Connected to db");
     const user = await User.findById(userId);
 
     if (!user) {
@@ -83,9 +84,10 @@ export async function POST( // save study plan
         user.studyMaterials = [body];
       }
     }
-    await user.save();
+    await user.save({ validateBeforeSave: false });
     return NextResponse.json({ message: "Study plan added" });
   } catch (error) {
+    console.log("error", error);
     return NextResponse.json({ message: "Server error" }, { status: 500 });
   }
 }

@@ -43,9 +43,9 @@ const TopicPortalView = () => {
   }, [context?.newResearchResponse]);
 
   return (
-    <>
+    <section className="max-h-[80vh] overflow-hidden">
       {context?.isExplainingTopic && (
-        <div className="removescrollbar sm:w-[40vw]y h-[100vh] w-full overflow-scroll bg-white py-5 px-1 md:px-5">
+        <div className="removescrollbar sm:w-[40vw]y h-[100vh]y h-full w-full overflow-scroll bg-white py-5 px-1 md:px-5">
           {text && !context?.isLoadingExplanation ? (
             <div className="text-black">
               {/* <button
@@ -76,10 +76,10 @@ const TopicPortalView = () => {
               Loading explanation....
             </div>
           )}
-          {showQuiz && <Quiz />}
+          {showQuiz && <Quiz setShowQuiz={setShowQuiz}/>}
         </div>
       )}
-    </>
+    </section>
   );
 };
 

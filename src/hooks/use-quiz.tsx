@@ -58,8 +58,8 @@ const useQuiz = () => {
           } else {
             // Final question completed
             setAlertText("Congratulations! You've completed the test.");
-            await handleMoveToNext();
             setQuizEndText("Consider moving to the next level!");
+            await handleMoveToNext();
 
             // setTimeout(() => {
             //   router.back();
