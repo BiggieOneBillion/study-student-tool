@@ -12,15 +12,12 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import { useGlobal } from "@/hooks/use-global";
-import CheckApiKey from "../sign-in/_component/check-api-key";
 
 export default function DashboardLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const context = useGlobal();
   return (
     <div suppressHydrationWarning={true}>
       <SidebarProvider>
@@ -46,7 +43,7 @@ export default function DashboardLayout({
             {children}
             {/* </ProtectRouteDashboard> */}
           </main>
-          {!context?.isApiKeyWorking && <CheckApiKey />}
+          {/* {!context?.isApiKeyWorking && <CheckApiKey />} */}
         </SidebarInset>
       </SidebarProvider>
     </div>

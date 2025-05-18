@@ -21,7 +21,7 @@ export default function useOwner(id: string) {
         setIsOwner(check);
       }
     }
-  }, [data]);
+  }, [data, id]);
 
   return isOwner;
 }

@@ -8,6 +8,7 @@ import {
   GalleryVerticalEnd,
   Map,
   PieChart,
+  Settings
 } from "lucide-react"
 
 import { NavProjects } from "@/components/nav-projects"
@@ -60,6 +61,11 @@ const data = {
       name: "Research",
       url: "/dashboard/research",
       icon: Map,
+    },
+    {
+      name: "Settings",
+      url: "/dashboard/settings",
+      icon: Settings,
     },
   ],
 }

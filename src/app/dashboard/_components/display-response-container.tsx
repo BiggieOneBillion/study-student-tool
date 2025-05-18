@@ -1,18 +1,13 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import {
-  Disclosure,
-  DisclosureButton,
-  DisclosurePanel,
-} from "@headlessui/react";
-import { FaChevronDown } from "react-icons/fa6";
 import { v4 } from "uuid";
 import { useGlobal } from "../../../hooks/use-global";
-import { Loader2, RefreshCcw, SaveIcon } from "lucide-react";
+import { Loader2, RefreshCcw, SaveIcon, BookOpen } from "lucide-react";
 import axios, { AxiosError } from "axios";
 import { toast } from "sonner";
 import SaveToReplaceAlert from "./save-to-replace-alert";
 import { useAuthStore } from "@/store/user-store";
+import { useRouter } from "next/navigation";
 
 type materialType = {
   topic: string | undefined;
@@ -21,6 +16,7 @@ type materialType = {
 };
 
 const DisplayResponseContainer = () => {
+  const router = useRouter();
   const context = useGlobal();
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -68,6 +64,41 @@ const DisplayResponseContainer = () => {
     }
   };
 
+  const handleSaveAndLearn = async () => {
+    setIsSaving(true);
+    setBtnText("Saving...");
+    const data = {
+      topic: context?.userSelection.topic,
+      level: context?.userSelection.level,
+      info: context?.responseGenarated,
+    };
+    setMaterial(data);
+    try {
+      const result = await axios.post(`/api/study-plan/${details.id}`, data);
+      if (result.status === 200) {
+        setIsSaving(false);
+        setSaveBtnDisabled(true);
+        setBtnText("Study plan saved");
+        toast.success("Study Material Saved");
+        
+        // Navigate to the materials page
+        router.push("/dashboard/materials");
+      }
+    } catch (error) {
+      setIsSaving(false);
+      if (error instanceof AxiosError) {
+        if (error.response?.data.message === "Study plan already exist") {
+          // If the plan already exists, we can still navigate to materials
+          toast.success("Study plan already exists. Redirecting to learning page...");
+          router.push("/dashboard/materials");
+        } else {
+          toast.error("Error Saving Study Material");
+          setBtnText("Try Again");
+        }
+      }
+    }
+  };
+
   useEffect(() => {
     if (context?.responseGenarated) {
       if (context.responseGenarated.length > 0) {
@@ -102,7 +133,6 @@ const DisplayResponseContainer = () => {
         </p>
         <div className="mt-2 flex flex-col gap-4 md:flex-row md:items-center">
           <button
-            // disabled={context?.}
             onClick={() => {
               setIsLoading(true);
               context?.generateRandomCallResponse();
@@ -131,47 +161,47 @@ const DisplayResponseContainer = () => {
               </>
             )}
           </button>
+          <button
+            disabled={saveBtnDisabled}
+            onClick={handleSaveAndLearn}
+            className="flex w-fit items-center gap-2 rounded-md border bg-blue-50 px-2 py-2 text-xs text-blue-700 hover:bg-blue-100 disabled:opacity-50 sm:text-sm"
+          >
+            {isSaving ? (
+              <>
+                <Loader2 size={16} className="animate-spin" /> Saving...
+              </>
+            ) : (
+              <>
+                <BookOpen size={16} />
+                Save and Learn
+              </>
+            )}
+          </button>
         </div>
       </section>
-      <div className="md:grid-cols-2y mx-auto grid w-full max-w-4xl flex-1 gap-4 overflow-y-scroll">
+      <div className="mx-auto w-full max-w-4xl flex-1 overflow-y-scroll px-2">
         {context?.responseGenarated.map((result) => (
-          //   <section className="relative">
-          <Disclosure
-            as="div"
-            className="relative border p-6"
-            defaultOpen={false}
-            key={v4()}
-          >
-            <DisclosureButton className="group flex w-full items-center justify-between">
-              <span className="text-sm/6 font-medium text-black group-data-[hover]:text-black/80">
-                {result.Courses}
-              </span>
-              <FaChevronDown className="size-5 fill-black/60 group-data-[open]:rotate-180 group-data-[hover]:fill-black/50" />
-            </DisclosureButton>
-            <DisclosurePanel className="absolute left-0 top-[80%] z-50 ml-3 w-full border bg-white px-5 text-sm/5 text-black/50">
-              <section className="space-y-5 px-2 py-5">
-                <div>
-                  <h3 className="text-smfont-medium text-black">
-                    Things to learn
-                  </h3>
-                  <p className="text-xs text-slate-500 underline">
-                    Click on each of the lessons to take them.
-                  </p>
-                </div>
-                <ul className="list-outside list-disc space-y-3">
-                  {result.Learn &&
-                    result.Learn.map((lesson) => (
-                      <li key={v4()}>
-                        <button className="w-full rounded-md border px-2 py-1 text-left text-sm">
-                          {lesson}
-                        </button>
-                      </li>
-                    ))}
-                </ul>
-              </section>
-            </DisclosurePanel>
-          </Disclosure>
-          //   </section>
+          <div className="mb-6 rounded-md bordery bg-slate-50 p-6" key={v4()}>
+            <h2 className="mb-4 text-lg font-semibold text-black">
+              {result.Courses}
+            </h2>
+            <div className="pl-4">
+              <h3 className="mb-2 font-medium text-black">Things to learn</h3>
+              <p className="mb-3 text-xs text-slate-500">
+                Click on each of the lessons to take them.
+              </p>
+              <ol className="list-decimal space-y-0 pl-5">
+                {result.Learn &&
+                  result.Learn.map((lesson) => (
+                    <li key={v4()}>
+                      <button className="w-full rounded-md bordery px-3 py-2 text-left text-sm hover:bg-gray-50">
+                        {lesson}
+                      </button>
+                    </li>
+                  ))}
+              </ol>
+            </div>
+          </div>
         ))}
       </div>
     </section>

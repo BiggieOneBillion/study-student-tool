@@ -1,0 +1,102 @@
+/* Modal content specific styles with smaller fonts and constrained images */
+.modal-content-response h1, .modal-content-response h2 {
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 8px;
+}
+
+.modal-content-response h1 {
+    font-size: 1.2rem;
+    margin-top: 16px;
+}
+
+.modal-content-response h2 {
+    font-size: 1rem;
+    margin-top: 20px;
+}
+
+/* Paragraph and list styles */
+.modal-content-response p {
+    font-size: 0.85rem;
+    margin-bottom: 12px;
+    padding: 0 10px;
+}
+
+.modal-content-response ul {
+    padding-left: 25px;
+}
+
+.modal-content-response ul li {
+    margin-bottom: 8px;
+    font-size: 0.85rem;
+}
+
+/* Table styles */
+.modal-content-response table {
+    width: 100%;
+    margin-top: 16px;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    font-size: 0.8rem;
+}
+
+.modal-content-response th, .modal-content-response td {
+    padding: 8px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+.modal-content-response th {
+    background-color: #34495e;
+    color: #fff;
+}
+
+.modal-content-response tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.modal-content-response a {
+    color: #2980b9;
+    text-decoration: none;
+    font-size: 0.85rem;
+}
+
+.modal-content-response a:hover {
+    text-decoration: underline;
+}
+
+/* Code block styles */
+.modal-content-response pre code {
+    background-color: #2c3e50;
+    color: #ecf0f1;
+    padding: 10px;
+    border-radius: 5px;
+    display: block;
+    overflow-x: auto;
+    font-family: Consolas, monaco, monospace;
+    font-size: 0.8rem;
+    max-width: 100%;
+}
+
+.modal-content-response code {
+    font-family: Consolas, monospace;
+    color: #2980b9;
+    font-size: 0.8rem;
+}
+
+/* Image constraints */
+.modal-content-response img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 10px auto;
+}
+
+/* Blockquote styles */
+.modal-content-response blockquote {
+    border-left: 3px solid #2980b9;
+    padding-left: 10px;
+    margin-left: 10px;
+    color: #555;
+    font-size: 0.85rem;
+}

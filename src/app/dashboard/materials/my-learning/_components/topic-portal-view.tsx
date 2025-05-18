@@ -43,7 +43,7 @@ const TopicPortalView = () => {
   }, [context?.newResearchResponse]);
 
   return (
-    <section className="max-h-[80vh] overflow-hidden">
+    <section className="max-h-[80vh] overflow-scroll  lg:overflow-hidden">
       {context?.isExplainingTopic && (
         <div className="removescrollbar sm:w-[40vw]y h-[100vh]y h-full w-full overflow-scroll bg-white py-5 px-1 md:px-5">
           {text && !context?.isLoadingExplanation ? (

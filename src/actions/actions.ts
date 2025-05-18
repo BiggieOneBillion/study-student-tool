@@ -1,3 +1,4 @@
+import run from "@/lib/gemini";
 import axios from "axios";
 import { toast } from "sonner";
 
@@ -47,3 +48,7 @@ export async function inviteUserToDocument(id: string, email: string) {
     throw new Error("Failed to invite user");
   }
 }
+
+export async function getResource(prompt:string){
+  return await run(prompt);
+};

@@ -89,7 +89,7 @@ export default function StudyForm() {
     },
   ] as const;
 
-  const context = useGlobal();
+  // const context = useGlobal();
 
   const [buttonText, setButtonText] = useState("Submit");
   const [isLoading, setIsLoading] = useState(false);
@@ -99,6 +99,9 @@ export default function StudyForm() {
     resolver: zodResolver(formSchema),
   });
 
+  const context = useGlobal();
+  const userPreferences = context?.userPreferences;
+
   function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       //   console.log(values);
@@ -106,7 +109,7 @@ export default function StudyForm() {
       setIsLoading(true);
       setCounter(0); // Reset counter when starting the loading
       setLoadingText(loadingPhrases[0]); // Set initial loading text
-      context?.callresponse(values.topic, values.level);
+      context?.callresponse(values.topic, values.level, userPreferences!);
       toast.success("Generating Syllabus!");
     } catch (error) {
       // console.error("Form submission error", error);
@@ -134,7 +137,7 @@ export default function StudyForm() {
 
       return () => clearInterval(interval); // Clean up interval on unmount or when loading stops
     }
-  }, [isLoading, counter, loadingPhrases]);
+  }, [isLoading, counter]);
 
   return (
     <Form {...form}>

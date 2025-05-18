@@ -69,7 +69,7 @@ function Quiz({ setShowQuiz }: Props) {
     if (!questionModal) {
       router.back(); // or return to the home page.
     }
-  }, []);
+  }, [questionModal, router]);
 
   return (
     <div>

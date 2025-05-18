@@ -26,6 +26,21 @@ const userSchema = new Schema({
     owner: [{ type: Schema.Types.ObjectId, ref: "Docs" }],
     shared: [{ type: Schema.Types.ObjectId, ref: "Docs" }],
   },
+  learningPreferences: {
+    visualLearning: { type: Boolean, default: false },
+    depthPreference: { type: String, enum: ["depth", "breadth"], default: "breadth" },
+    pacePreference: { type: String, enum: ["slow", "moderate", "fast"], default: "moderate" },
+    lastUpdated: { type: Date, default: Date.now }
+  },
+  aiConversations: [{
+    topic: String,
+    messages: [{
+      role: { type: String, enum: ["user", "assistant"] },
+      content: String,
+      timestamp: { type: Date, default: Date.now }
+    }],
+    createdAt: { type: Date, default: Date.now }
+  }]
 });
 
 const User = models.User || model("User", userSchema);
