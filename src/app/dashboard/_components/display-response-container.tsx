@@ -187,14 +187,14 @@ const DisplayResponseContainer = () => {
             </h2>
             <div className="pl-4">
               <h3 className="mb-2 font-medium text-black">Things to learn</h3>
-              <p className="mb-3 text-xs text-slate-500">
+              {/* <p className="mb-3 text-xs text-slate-500">
                 Click on each of the lessons to take them.
-              </p>
+              </p> */}
               <ol className="list-decimal space-y-0 pl-5">
                 {result.Learn &&
                   result.Learn.map((lesson) => (
                     <li key={v4()}>
-                      <button className="w-full rounded-md bordery px-3 py-2 text-left text-sm hover:bg-gray-50">
+                      <button className="w-full text-slate-500 rounded-md bordery px-3 py-2 text-left text-sm hover:bg-gray-50">
                         {lesson}
                       </button>
                     </li>
