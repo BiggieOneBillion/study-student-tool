@@ -1,30 +1,39 @@
 import { NextRequest, NextResponse } from "next/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { z } from "zod";
 
-// Server-side environment variable (not exposed to client)
+const geminiRequestSchema = z.object({
+  prompt: z.string().min(1, "Prompt is required"),
+  model: z.string().default("gemini-1.5-flash"),
+});
+
+// Server-side environment variable
 const API_KEY = process.env.GEMINI_API_KEY;
 
 export async function POST(req: NextRequest) {
-  // Verify user is authenticated
-  // This could use your existing auth token verification
-  
   try {
-    const { prompt, model = "gemini-1.5-flash" } = await req.json();
-    
-    if (!prompt) {
-      return NextResponse.json({ error: "Prompt is required" }, { status: 400 });
+    const json = await req.json();
+    const result = geminiRequestSchema.safeParse(json);
+
+    if (!result.success) {
+      return NextResponse.json(
+        { error: "Invalid request data", details: result.error.format() },
+        { status: 400 }
+      );
     }
-    
+
+    const { prompt, model } = result.data;
+
     const genAI = new GoogleGenerativeAI(API_KEY as string);
     const genModel = genAI.getGenerativeModel({ model });
-    
-    const result = await genModel.generateContent(prompt);
-    const response = await result.response;
+
+    const aiResult = await genModel.generateContent(prompt);
+    const response = await aiResult.response;
     const text = response.text();
-    
+
     return NextResponse.json({ result: text });
   } catch (error) {
-    console.error("Gemini API error:",  (error as Error));
+    console.error("Gemini API error:", error);
     return NextResponse.json(
       { error: (error as Error).message || "Failed to generate content" },
       { status: 500 }

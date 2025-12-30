@@ -1,6 +1,21 @@
 import { dbConnect } from "@/lib/db";
 import User from "@/models/user";
 import { NextResponse, NextRequest } from "next/server";
+import { z } from "zod";
+
+const studyPlanSchema = z.object({
+  topic: z.string().min(1),
+  level: z.string().min(1),
+  info: z.array(z.object({
+    id: z.union([z.string(), z.number()]),
+    Courses: z.string(),
+    Learn: z.array(z.string()),
+    quiz: z.array(z.object({
+      title: z.string(),
+      isDone: z.boolean()
+    })).optional()
+  }))
+});
 
 interface Iinfo {
   id: string;
@@ -13,8 +28,19 @@ export async function POST( // save study plan
   request: NextRequest,
   { params }: { params: { userId: string } },
 ): Promise<NextResponse> {
-  const body = await request.json();
-  const { userId } = params;
+  try {
+    const json = await request.json();
+    const validation = studyPlanSchema.safeParse(json);
+
+    if (!validation.success) {
+      return NextResponse.json(
+        { error: "Invalid request data", details: validation.error.format() },
+        { status: 400 }
+      );
+    }
+
+    const body = validation.data;
+    const { userId } = params;
 
   try {
     //  console.log("body", body);
@@ -90,14 +116,27 @@ export async function POST( // save study plan
     console.log("error", error);
     return NextResponse.json({ message: "Server error" }, { status: 500 });
   }
-}
+} catch (error) {
+  return NextResponse.json({ message: "Server error" }, { status: 500 });
+}}
 
 export async function PUT( // update study plan
   request: NextRequest,
   { params }: { params: { userId: string } },
 ): Promise<NextResponse> {
-  const body = await request.json();
-  const { userId } = params;
+  try {
+    const json = await request.json();
+    const validation = studyPlanSchema.safeParse(json);
+
+    if (!validation.success) {
+      return NextResponse.json(
+        { error: "Invalid request data", details: validation.error.format() },
+        { status: 400 }
+      );
+    }
+
+    const body = validation.data;
+    const { userId } = params;
 
   try {
     await dbConnect(); // connect to database
@@ -150,6 +189,9 @@ export async function PUT( // update study plan
   } catch (error) {
     return NextResponse.json({ message: "Server Error" }, { status: 500 });
   }
+} catch (error) {
+  return NextResponse.json({ message: "Server Error" }, { status: 500 });
+}
 }
 
 export async function GET( // get all study plan
