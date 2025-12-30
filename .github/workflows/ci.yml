@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci --legacy-peer-deps
+      
+    - name: Lint
+      run: npm run lint
+      
+    - name: Type check
+      run: npx tsc --noEmit
+      
+    - name: Build
+      run: npm run build
+      env:
+        # Mocking required ENVs for build step
+        MONGO_URL: "mongodb://localhost:27017/test"
+        NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: "test"
+        CLERK_SECRET_KEY: "test"
+        NEXT_PUBLIC_CLERK_SIGN_IN_URL: "/sign-in"
+        NEXT_PUBLIC_CLERK_SIGN_UP_URL: "/sign-up"
+        LIVEBLOCKS_SECRET_KEY: "test"
+        GEMINI_API_KEY: "test"
